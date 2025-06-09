@@ -1,0 +1,845 @@
+---
+import Layout from '../layouts/Layout.astro';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
+import { microsoftGraphElements, microsoftMetadata, getGraphStats } from '../data/microsoft_data';
+
+// Extract data for dynamic content
+const { companyName, ticker, exchange, marketCap, keyMetrics, segments, sections } = microsoftMetadata;
+const graphStats = getGraphStats();
+---
+
+<Layout title="Microsoft Corporation (MSFT) - Comprehensive Analysis">
+	<main>
+		<!-- Header Section -->
+		<div class="header-section">
+			<div class="company-header">
+				<div class="company-logo">
+					<span class="microsoft-icon">🪟</span>
+				</div>
+				<div class="company-info">
+					<h1 class="company-name">{companyName}</h1>
+					<div class="ticker-info">
+						<span class="ticker">{exchange}: {ticker}</span>
+						<span class="market-cap">Market Cap: {marketCap}</span>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Key Metrics Dashboard -->
+			<div class="metrics-dashboard">
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.revenue.value}</div>
+					<div class="metric-label">{microsoftMetadata.latestQuarter} Revenue</div>
+					<div class={`metric-change ${keyMetrics.revenue.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.revenue.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.eps.value}</div>
+					<div class="metric-label">{microsoftMetadata.latestQuarter} EPS</div>
+					<div class={`metric-change ${keyMetrics.eps.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.eps.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.operatingMargin.value}</div>
+					<div class="metric-label">Operating Margin</div>
+					<div class={`metric-change ${keyMetrics.operatingMargin.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.operatingMargin.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.cloudRevenue.value}</div>
+					<div class="metric-label">Microsoft Cloud Revenue</div>
+					<div class={`metric-change ${keyMetrics.cloudRevenue.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.cloudRevenue.change}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Introduction Section -->
+		<div class="intro-section">
+			<h2>Comprehensive Investment Analysis</h2>
+			<p class="intro-text">
+				Explore Microsoft's complete business landscape through our interactive knowledge graph. This analysis covers Microsoft's 
+				financial performance, business segments, AI strategy, competitive positioning, and strategic outlook 
+				based on the latest {microsoftMetadata.latestQuarter} earnings and market developments.
+			</p>
+			
+			<div class="analysis-highlights">
+				<div class="highlight-item">
+					<strong>🚀 Key Catalysts:</strong> $13B AI business run rate, Azure 33% growth, Copilot ecosystem expansion
+				</div>
+				<div class="highlight-item">
+					<strong>💪 Strengths:</strong> {marketCap} market cap, 45% operating margin, OpenAI partnership, enterprise dominance
+				</div>
+				<div class="highlight-item">
+					<strong>⚠️ Watch Points:</strong> AWS competition, regulatory scrutiny, AI monetization execution
+				</div>
+			</div>
+		</div>
+
+		<!-- Business Segments Overview -->
+		<div class="segments-section">
+			<h3>Revenue Breakdown by Segment</h3>
+			<div class="segments-grid">
+				{segments.map((segment) => (
+					<div class="segment-card" data-segment={segment.id}>
+						<div class="segment-header">
+							<h4>{segment.name}</h4>
+							<span class="segment-percentage">{segment.percentage}%</span>
+						</div>
+						<div class="segment-revenue">{segment.revenue}</div>
+						<div class="segment-bar">
+							<div 
+								class="segment-fill" 
+								style={`width: ${segment.percentage * 2}%`}
+							></div>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+
+		<!-- Navigation Tabs -->
+		<div class="section-navigator">
+			{sections.map((section, index) => (
+				<button 
+					class={`nav-tab ${index === 0 ? 'active' : ''}`}
+					data-section={section.id}
+					data-priority={section.priority}
+				>
+					{section.icon} {section.name}
+				</button>
+			))}
+		</div>
+
+		<!-- Graph Statistics -->
+		<div class="stats-section">
+			<h3>Analysis Coverage</h3>
+			<div class="stats-grid">
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.totalNodes}</div>
+					<div class="stat-label">Analysis Points</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.mainSections}</div>
+					<div class="stat-label">Main Sections</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.businessSegments}</div>
+					<div class="stat-label">Business Segments</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.competitors}</div>
+					<div class="stat-label">Key Competitors</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.swotElements}</div>
+					<div class="stat-label">SWOT Elements</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.totalEdges}</div>
+					<div class="stat-label">Relationships</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Knowledge Graph Section -->
+		<div class="graph-section">
+			<div class="graph-header">
+				<h3>Interactive Knowledge Graph</h3>
+				<div class="graph-controls">
+					<button class="control-btn" id="resetBtn">
+						🔄 Reset View
+					</button>
+					<button class="control-btn" id="expandBtn">
+						🔍 Expand All
+					</button>
+					<div class="filter-dropdown">
+						<select id="categoryFilter" class="filter-select">
+							<option value="">All Categories</option>
+							<option value="main_category">Main Sections</option>
+							<option value="segment">Business Segments</option>
+							<option value="competitor">Competitors</option>
+							<option value="swot_strength">Strengths</option>
+							<option value="swot_weakness">Weaknesses</option>
+							<option value="swot_opportunity">Opportunities</option>
+							<option value="swot_threat">Threats</option>
+						</select>
+					</div>
+					<div class="search-box">
+						<input type="text" id="searchInput" placeholder="Search nodes..." />
+						<button id="searchBtn">🔍</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class="graph-legend">
+				<div class="legend-item">
+					<span class="legend-color main-category"></span>
+					<span>Main Categories</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color category"></span>
+					<span>Analysis Areas</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color segment"></span>
+					<span>Business Segments</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color competitor"></span>
+					<span>Competitors</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color swot"></span>
+					<span>SWOT Elements</span>
+				</div>
+			</div>
+
+			<KnowledgeGraph elements={microsoftGraphElements} containerId="microsoft-graph" />
+		</div>
+
+		<!-- Key Insights Section -->
+		<div class="insights-section">
+			<h3>Key Investment Insights</h3>
+			<div class="insights-grid">
+				<div class="insight-card bullish">
+					<h4>🟢 Bullish Factors</h4>
+					<ul>
+						<li>$13B AI business run rate with OpenAI partnership</li>
+						<li>Azure growing 33% vs AWS 17% market share gains</li>
+						<li>45% operating margin industry leadership</li>
+						<li>Enterprise dominance in productivity and cloud</li>
+					</ul>
+				</div>
+				<div class="insight-card bearish">
+					<h4>🔴 Risk Factors</h4>
+					<ul>
+						<li>Intensifying AI competition from Google and Amazon</li>
+						<li>Regulatory scrutiny on market dominance</li>
+						<li>Premium valuation (~35x P/E) execution dependent</li>
+						<li>OpenAI partnership dependency and costs</li>
+					</ul>
+				</div>
+				<div class="insight-card neutral">
+					<h4>📈 Analyst Consensus</h4>
+					<ul>
+						<li>Average price target: $480-500 (15-20% upside)</li>
+						<li>Consensus rating: Strong Buy (majority)</li>
+						<li>Key catalyst: AI monetization execution</li>
+						<li>Financial strength: $65B+ annual FCF generation</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer Info -->
+		<div class="footer-info">
+			<p><strong>Data Sources:</strong> Q3 FY2025 earnings report, SEC filings, analyst reports, market research</p>
+			<p><strong>Last Updated:</strong> May 2025 | <strong>Analysis Framework:</strong> 8-section comprehensive research methodology</p>
+		</div>
+	</main>
+</Layout>
+
+<style>
+	main {
+		padding: 1rem;
+		max-width: 1400px;
+		margin: 0 auto;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+	}
+
+	/* Header Section */
+	.header-section {
+		background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+		color: white;
+		padding: 2rem;
+		border-radius: 12px;
+		margin-bottom: 2rem;
+	}
+
+	.company-header {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+		margin-bottom: 2rem;
+	}
+
+	.company-logo .microsoft-icon {
+		font-size: 3rem;
+		background: rgba(255, 255, 255, 0.2);
+		padding: 1rem;
+		border-radius: 12px;
+		display: block;
+	}
+
+	.company-name {
+		font-size: 2.5rem;
+		font-weight: 700;
+		margin: 0;
+		line-height: 1.2;
+	}
+
+	.ticker-info {
+		display: flex;
+		gap: 2rem;
+		margin-top: 0.5rem;
+	}
+
+	.ticker, .market-cap {
+		font-size: 1.1rem;
+		opacity: 0.9;
+	}
+
+	/* Metrics Dashboard */
+	.metrics-dashboard {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.metric-card {
+		background: rgba(255, 255, 255, 0.15);
+		padding: 1.5rem;
+		border-radius: 8px;
+		backdrop-filter: blur(10px);
+	}
+
+	.metric-value {
+		font-size: 2rem;
+		font-weight: 700;
+		margin-bottom: 0.5rem;
+	}
+
+	.metric-label {
+		font-size: 0.9rem;
+		opacity: 0.8;
+		margin-bottom: 0.5rem;
+	}
+
+	.metric-change {
+		font-size: 0.9rem;
+		font-weight: 600;
+	}
+
+	.metric-change.positive {
+		color: #4ade80;
+	}
+
+	/* Introduction Section */
+	.intro-section {
+		margin-bottom: 2rem;
+	}
+
+	.intro-section h2 {
+		font-size: 2rem;
+		margin-bottom: 1rem;
+		color: #1e293b;
+	}
+
+	.intro-text {
+		font-size: 1.1rem;
+		line-height: 1.6;
+		color: #64748b;
+		margin-bottom: 1.5rem;
+	}
+
+	.analysis-highlights {
+		display: grid;
+		gap: 1rem;
+		margin-top: 1.5rem;
+	}
+
+	.highlight-item {
+		padding: 1rem;
+		background: #f8fafc;
+		border-left: 4px solid #0078d4;
+		border-radius: 4px;
+		font-size: 0.95rem;
+	}
+
+	/* Segments Section */
+	.segments-section {
+		margin-bottom: 2rem;
+	}
+
+	.segments-section h3 {
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+		color: #1e293b;
+	}
+
+	.segments-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.segment-card {
+		background: white;
+		border: 1px solid #e2e8f0;
+		border-radius: 8px;
+		padding: 1.5rem;
+		transition: transform 0.2s, box-shadow 0.2s;
+	}
+
+	.segment-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.segment-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+	}
+
+	.segment-header h4 {
+		margin: 0;
+		font-size: 1.1rem;
+		color: #1e293b;
+	}
+
+	.segment-percentage {
+		font-size: 1.2rem;
+		font-weight: 700;
+		color: #0078d4;
+	}
+
+	.segment-revenue {
+		font-size: 1.3rem;
+		font-weight: 600;
+		color: #059669;
+		margin-bottom: 1rem;
+	}
+
+	.segment-bar {
+		height: 6px;
+		background: #e2e8f0;
+		border-radius: 3px;
+		overflow: hidden;
+	}
+
+	.segment-fill {
+		height: 100%;
+		background: linear-gradient(90deg, #0078d4, #106ebe);
+		transition: width 0.3s ease;
+	}
+
+	/* Navigation Tabs */
+	.section-navigator {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 2rem;
+		padding: 1rem;
+		background: #f8fafc;
+		border-radius: 8px;
+	}
+
+	.nav-tab {
+		padding: 0.75rem 1.5rem;
+		border: none;
+		background: white;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: all 0.2s;
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
+	.nav-tab:hover {
+		background: #e2e8f0;
+	}
+
+	.nav-tab.active {
+		background: #0078d4;
+		color: white;
+	}
+
+	/* Graph Statistics Section */
+	.stats-section {
+		background: white;
+		border-radius: 12px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.stats-section h3 {
+		color: #1f2937;
+		margin-bottom: 1.5rem;
+		text-align: center;
+	}
+
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.stat-item {
+		text-align: center;
+		padding: 1.5rem;
+		background: #f8fafc;
+		border-radius: 12px;
+		transition: transform 0.2s ease;
+	}
+
+	.stat-item:hover {
+		transform: translateY(-2px);
+		background: #e2e8f0;
+	}
+
+	.stat-number {
+		font-size: 2.5rem;
+		font-weight: 700;
+		color: #0078d4;
+		margin-bottom: 0.5rem;
+	}
+
+	.stat-label {
+		font-size: 0.9rem;
+		color: #6b7280;
+		font-weight: 500;
+	}
+
+	/* Graph Section */
+	.graph-section {
+		margin-bottom: 2rem;
+	}
+
+	.graph-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	.graph-header h3 {
+		font-size: 1.5rem;
+		color: #1e293b;
+		margin: 0;
+	}
+
+	.graph-controls {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.control-btn {
+		padding: 0.5rem 1rem;
+		border: 1px solid #d1d5db;
+		background: white;
+		border-radius: 6px;
+		cursor: pointer;
+		font-size: 0.9rem;
+		transition: all 0.2s;
+	}
+
+	.control-btn:hover {
+		background: #f3f4f6;
+	}
+
+	.filter-select {
+		padding: 0.5rem;
+		border: 1px solid #d1d5db;
+		border-radius: 6px;
+		background: white;
+	}
+
+	.search-box {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.search-box input {
+		padding: 0.5rem;
+		border: 1px solid #d1d5db;
+		border-radius: 6px;
+		width: 150px;
+	}
+
+	.graph-legend {
+		display: flex;
+		gap: 1.5rem;
+		margin-bottom: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.legend-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.9rem;
+	}
+
+	.legend-color {
+		width: 12px;
+		height: 12px;
+		border-radius: 2px;
+	}
+
+	.legend-color.main-category { background: #0078d4; }
+	.legend-color.category { background: #059669; }
+	.legend-color.segment { background: #dc2626; }
+	.legend-color.competitor { background: #ea580c; }
+	.legend-color.swot { background: #7c3aed; }
+
+	/* Insights Section */
+	.insights-section {
+		margin-bottom: 2rem;
+	}
+
+	.insights-section h3 {
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+		color: #1e293b;
+	}
+
+	.insights-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.insight-card {
+		border-radius: 8px;
+		padding: 1.5rem;
+		border-left: 4px solid;
+	}
+
+	.insight-card.bullish {
+		background: #f0fdf4;
+		border-left-color: #22c55e;
+	}
+
+	.insight-card.bearish {
+		background: #fef2f2;
+		border-left-color: #ef4444;
+	}
+
+	.insight-card.neutral {
+		background: #f0f9ff;
+		border-left-color: #3b82f6;
+	}
+
+	.insight-card h4 {
+		margin-top: 0;
+		margin-bottom: 1rem;
+		font-size: 1.1rem;
+	}
+
+	.insight-card ul {
+		margin: 0;
+		padding-left: 1.5rem;
+	}
+
+	.insight-card li {
+		margin-bottom: 0.5rem;
+		line-height: 1.4;
+	}
+
+	/* Footer Info */
+	.footer-info {
+		text-align: center;
+		color: #6b7280;
+		font-size: 0.9rem;
+		padding: 1.5rem;
+		background: #f8fafc;
+		border-radius: 8px;
+	}
+
+	.footer-info p {
+		margin: 0.5rem 0;
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		.company-header {
+			flex-direction: column;
+			text-align: center;
+		}
+
+		.ticker-info {
+			justify-content: center;
+		}
+
+		.metrics-dashboard {
+			grid-template-columns: 1fr;
+		}
+
+		.graph-header {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.graph-controls {
+			justify-content: center;
+		}
+
+		.insights-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.stats-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.filter-dropdown {
+			order: -1;
+			margin-bottom: 1rem;
+		}
+
+		.filter-select {
+			min-width: 100%;
+		}
+	}
+</style>
+
+<script>
+	// Navigation functionality
+	function focusSection(sectionId: string) {
+		// Update active tab
+		document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+		
+		// Focus on the specific node in the graph (this would need to be implemented in the KnowledgeGraph component)
+		console.log('Focusing on section:', sectionId);
+		// You could emit a custom event here that the KnowledgeGraph component listens to
+		window.dispatchEvent(new CustomEvent('focusNode', { detail: { nodeId: sectionId } }));
+	}
+
+	function resetGraph() {
+		console.log('Resetting graph view');
+		window.dispatchEvent(new CustomEvent('resetGraph'));
+	}
+
+	function expandAll() {
+		console.log('Expanding all nodes');
+		window.dispatchEvent(new CustomEvent('expandAll'));
+	}
+
+	function searchNodes() {
+		const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+		if (searchInput) {
+			const searchTerm = searchInput.value;
+			console.log('Searching for:', searchTerm);
+			window.dispatchEvent(new CustomEvent('searchNodes', { detail: { term: searchTerm } }));
+		}
+	}
+
+	function filterByCategory() {
+		const filterSelect = document.getElementById('categoryFilter') as HTMLSelectElement;
+		if (filterSelect) {
+			const categoryFilter = filterSelect.value;
+			console.log('Filtering by category:', categoryFilter);
+			window.dispatchEvent(new CustomEvent('filterNodes', { detail: { category: categoryFilter } }));
+		}
+	}
+
+	// Initialize event listeners when DOM is loaded
+	document.addEventListener('DOMContentLoaded', () => {
+		// Search on Enter key
+		const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+		if (searchInput) {
+			searchInput.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter') {
+					searchNodes();
+				}
+			});
+		}
+
+		// Search button click
+		const searchBtn = document.getElementById('searchBtn');
+		if (searchBtn) {
+			searchBtn.addEventListener('click', searchNodes);
+		}
+
+		// Reset button click
+		const resetBtn = document.getElementById('resetBtn');
+		if (resetBtn) {
+			resetBtn.addEventListener('click', resetGraph);
+		}
+
+		// Expand button click
+		const expandBtn = document.getElementById('expandBtn');
+		if (expandBtn) {
+			expandBtn.addEventListener('click', expandAll);
+		}
+
+		// Category filter change
+		const categoryFilter = document.getElementById('categoryFilter');
+		if (categoryFilter) {
+			categoryFilter.addEventListener('change', filterByCategory);
+		}
+
+		// Handle nav tab clicks with proper event handling
+		document.querySelectorAll('.nav-tab').forEach(tab => {
+			tab.addEventListener('click', (e) => {
+				const target = e.target as HTMLElement;
+				if (target) {
+					// Update active tab
+					document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+					target.classList.add('active');
+					
+					// Extract section ID from data attribute
+					const sectionId = target.getAttribute('data-section') || 'company_info';
+					focusSection(sectionId);
+				}
+			});
+		});
+
+		// Handle segment card clicks
+		document.querySelectorAll('.segment-card').forEach(card => {
+			card.addEventListener('click', (e) => {
+				const target = e.currentTarget as HTMLElement;
+				if (target) {
+					const segmentId = target.getAttribute('data-segment');
+					if (segmentId) {
+						// Remove previous segment highlights
+						document.querySelectorAll('.segment-card').forEach(c => c.classList.remove('highlighted'));
+						target.classList.add('highlighted');
+						
+						// Focus on the segment in the graph
+						focusSection(segmentId);
+						
+						// Show visual feedback
+						target.style.borderColor = '#059669';
+						setTimeout(() => {
+							target.style.borderColor = '#3b82f6';
+						}, 2000);
+					}
+				}
+			});
+		});
+
+		// Add segment hover analytics
+		document.querySelectorAll('.segment-card').forEach(card => {
+			card.addEventListener('mouseenter', (e) => {
+				const target = e.currentTarget as HTMLElement;
+				const segmentName = target.querySelector('h4')?.textContent;
+				console.log(`Segment hovered: ${segmentName}`);
+			});
+		});
+
+		// Animate segment bars on load
+		setTimeout(() => {
+			document.querySelectorAll('.segment-fill').forEach(fill => {
+				const element = fill as HTMLElement;
+				const width = element.style.width;
+				element.style.width = '0%';
+				setTimeout(() => {
+					element.style.width = width;
+				}, 300);
+			});
+		}, 500);
+	});
+</script> 

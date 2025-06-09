@@ -1,0 +1,137 @@
+---
+// This component will render an interactive knowledge graph.
+// It uses Cytoscape.js to visualize the data.
+
+export interface Node {
+  group: 'nodes';
+  data: {
+    id: string;
+    label: string;
+    parent?: string;
+    type?: string;
+    text?: string;
+  };
+}
+
+export interface Edge {
+  group: 'edges';
+  data: {
+    id: string;
+    source: string;
+    target: string;
+    label?: string;
+  };
+}
+
+export type GraphElement = Node | Edge;
+
+export interface Props {
+  elements: GraphElement[];
+  containerId: string;
+}
+
+const { elements, containerId } = Astro.props;
+---
+
+<div id={containerId} class="knowledge-graph-container"></div>
+
+<script define:vars={{ elements, containerId }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById(containerId);
+
+    if (container && window.cytoscape) {
+      try {
+        const cy = window.cytoscape({
+          container: container,
+          elements: elements,
+          style: [
+            // General node style
+            {
+              selector: 'node',
+              style: {
+                'background-color': '#f0f0f0',
+                'color': '#333',
+                'border-color': '#ccc',
+                'border-width': 1,
+                'label': 'data(label)',
+                'padding': '12px',
+                'shape': 'round-rectangle',
+                'text-valign': 'center',
+                'text-halign': 'center',
+                'font-size': '12px',
+                'text-wrap': 'wrap',
+                'text-max-width': '100px',
+                'text-outline-color': '#fff',
+                'text-outline-width': 2,
+              }
+            },
+            // Company node style
+            {
+              selector: 'node[type="company"]',
+              style: {
+                'background-color': '#2a62ac',
+                'color': 'white',
+                'font-size': '18px',
+                'font-weight': 'bold',
+                'padding': '16px',
+                'text-outline-width': 0,
+              }
+            },
+            // Category node style
+            {
+              selector: 'node[type="category"]',
+              style: {
+                'background-color': '#698fb5',
+                'color': 'white',
+                'font-size': '14px',
+                 'text-outline-width': 0,
+              }
+            },
+            // Sub-category node style
+            {
+                selector: 'node[type="subcategory"]',
+                style: {
+                    'background-color': '#a3b8cc',
+                    'color': '#222',
+                    'font-size': '13px',
+                    'text-outline-width': 0,
+                }
+            },
+            // Edge style
+            {
+              selector: 'edge',
+              style: {
+                'width': 1.5,
+                'line-color': '#b0c4de',
+                'target-arrow-color': '#b0c4de',
+                'target-arrow-shape': 'triangle',
+                'curve-style': 'bezier',
+              }
+            }
+          ],
+          layout: {
+            name: 'breadthfirst',
+            directed: true,
+            padding: 20,
+            spacingFactor: 1.1,
+            grid: true,
+          }
+        });
+      } catch (e) {
+        console.error("Error creating Cytoscape graph:", e);
+      }
+    } else {
+      if (!container) console.error("Container element not found in the DOM.");
+      if (!window.cytoscape) console.error("Cytoscape library not found on window object.");
+    }
+  });
+</script>
+
+<style>
+  .knowledge-graph-container {
+    width: 100%;
+    height: 800px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+</style> 

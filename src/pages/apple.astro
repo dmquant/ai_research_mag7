@@ -1,0 +1,924 @@
+---
+import Layout from '../layouts/Layout.astro';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
+import { appleGraphElements, appleMetadata, getGraphStats } from '../data/apple_data';
+
+// Extract data for dynamic content
+const { companyName, ticker, exchange, marketCap, keyMetrics, segments, sections } = appleMetadata;
+const graphStats = getGraphStats();
+---
+
+<Layout title="Apple Inc. (AAPL) - Comprehensive Analysis">
+	<main>
+		<!-- Header Section -->
+		<div class="header-section">
+			<div class="company-header">
+				<div class="company-logo">
+					<span class="apple-icon">🍎</span>
+				</div>
+				<div class="company-info">
+					<h1 class="company-name">{companyName}</h1>
+					<div class="ticker-info">
+						<span class="ticker">{exchange}: {ticker}</span>
+						<span class="market-cap">Market Cap: {marketCap}</span>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Key Metrics Dashboard -->
+			<div class="metrics-dashboard">
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.revenue.value}</div>
+					<div class="metric-label">{appleMetadata.latestQuarter} Revenue</div>
+					<div class={`metric-change ${keyMetrics.revenue.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.revenue.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.eps.value}</div>
+					<div class="metric-label">{appleMetadata.latestQuarter} EPS</div>
+					<div class={`metric-change ${keyMetrics.eps.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.eps.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.grossMargin.value}</div>
+					<div class="metric-label">Gross Margin</div>
+					<div class={`metric-change ${keyMetrics.grossMargin.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.grossMargin.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.activeDevices.value}</div>
+					<div class="metric-label">Active Devices</div>
+					<div class={`metric-change ${keyMetrics.activeDevices.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.activeDevices.change}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Introduction Section -->
+		<div class="intro-section">
+			<h2>Comprehensive Investment Analysis</h2>
+			<p class="intro-text">
+				Explore Apple's complete business landscape through our interactive knowledge graph. This analysis covers Apple's 
+				financial performance, business segments, competitive positioning, market opportunities, and strategic outlook 
+				based on the latest {appleMetadata.latestQuarter} earnings and market developments.
+			</p>
+			
+			<div class="analysis-highlights">
+				<div class="highlight-item">
+					<strong>🚀 Key Catalysts:</strong> Apple Intelligence AI platform, Vision Pro expansion, India market growth
+				</div>
+				<div class="highlight-item">
+					<strong>💪 Strengths:</strong> {marketCap} market cap, {segments[0].percentage}% iPhone revenue share, 75% Services gross margin
+				</div>
+				<div class="highlight-item">
+					<strong>⚠️ Watch Points:</strong> China market decline (-11.1%), regulatory pressure, supply chain shifts
+				</div>
+			</div>
+		</div>
+
+		<!-- Business Segments Overview -->
+		<div class="segments-section">
+			<h3>Revenue Breakdown by Segment</h3>
+			<div class="segments-grid">
+				{segments.map((segment) => (
+					<div class="segment-card" data-segment={segment.id}>
+						<div class="segment-header">
+							<h4>{segment.name}</h4>
+							<span class="segment-percentage">{segment.percentage}%</span>
+						</div>
+						<div class="segment-revenue">{segment.revenue}</div>
+						<div class="segment-bar">
+							<div 
+								class="segment-fill" 
+								style={`width: ${segment.percentage * 2}%`}
+							></div>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+
+		<!-- Navigation Tabs -->
+		<div class="section-navigator">
+			{sections.map((section, index) => (
+				<button 
+					class={`nav-tab ${index === 0 ? 'active' : ''}`}
+					data-section={section.id}
+					data-priority={section.priority}
+				>
+					{section.icon} {section.name}
+				</button>
+			))}
+		</div>
+
+		<!-- Graph Statistics -->
+		<div class="stats-section">
+			<h3>Analysis Coverage</h3>
+			<div class="stats-grid">
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.totalNodes}</div>
+					<div class="stat-label">Analysis Points</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.mainSections}</div>
+					<div class="stat-label">Main Sections</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.businessSegments}</div>
+					<div class="stat-label">Business Segments</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.competitors}</div>
+					<div class="stat-label">Key Competitors</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.swotElements}</div>
+					<div class="stat-label">SWOT Elements</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.totalEdges}</div>
+					<div class="stat-label">Relationships</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Knowledge Graph Section -->
+		<div class="graph-section">
+			<div class="graph-header">
+				<h3>Interactive Knowledge Graph</h3>
+				<div class="graph-controls">
+					<button class="control-btn" id="resetBtn">
+						🔄 Reset View
+					</button>
+					<button class="control-btn" id="expandBtn">
+						🔍 Expand All
+					</button>
+					<div class="filter-dropdown">
+						<select id="categoryFilter" class="filter-select">
+							<option value="">All Categories</option>
+							<option value="main_category">Main Sections</option>
+							<option value="segment">Business Segments</option>
+							<option value="competitor">Competitors</option>
+							<option value="swot_strength">Strengths</option>
+							<option value="swot_weakness">Weaknesses</option>
+							<option value="swot_opportunity">Opportunities</option>
+							<option value="swot_threat">Threats</option>
+						</select>
+					</div>
+					<div class="search-box">
+						<input type="text" id="searchInput" placeholder="Search nodes..." />
+						<button id="searchBtn">🔍</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class="graph-legend">
+				<div class="legend-item">
+					<span class="legend-color main-category"></span>
+					<span>Main Categories</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color category"></span>
+					<span>Analysis Areas</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color segment"></span>
+					<span>Business Segments</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color competitor"></span>
+					<span>Competitors</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color swot"></span>
+					<span>SWOT Elements</span>
+				</div>
+			</div>
+
+			<KnowledgeGraph elements={appleGraphElements} containerId="apple-graph" />
+		</div>
+
+		<!-- Key Insights Section -->
+		<div class="insights-section">
+			<h3>Key Investment Insights</h3>
+			<div class="insights-grid">
+				<div class="insight-card bullish">
+					<h4>🟢 Bullish Factors</h4>
+					<ul>
+						<li>Services revenue hit record $26.34B (+14% YoY)</li>
+						<li>Apple Intelligence driving AI innovation</li>
+						<li>Strong cash generation: $100B+ annually</li>
+						<li>India manufacturing expansion reducing China risk</li>
+					</ul>
+				</div>
+				<div class="insight-card bearish">
+					<h4>🔴 Risk Factors</h4>
+					<ul>
+						<li>iPhone revenue concentration (51% of total)</li>
+						<li>China market decline (-11.1% YoY)</li>
+						<li>Regulatory pressure on App Store (EU DMA)</li>
+						<li>Lengthening smartphone replacement cycles</li>
+					</ul>
+				</div>
+				<div class="insight-card neutral">
+					<h4>📈 Analyst Consensus</h4>
+					<ul>
+						<li>Average price target: $230-235</li>
+						<li>Consensus rating: Buy (majority)</li>
+						<li>P/E ratio: ~30x (premium valuation)</li>
+						<li>Morgan Stanley "Top Pick" for 2025</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer Info -->
+		<div class="footer-info">
+			<p><strong>Data Sources:</strong> Q2 2025 earnings report, SEC filings, analyst reports, market research</p>
+			<p><strong>Last Updated:</strong> May 2025 | <strong>Analysis Framework:</strong> 8-section comprehensive research methodology</p>
+		</div>
+	</main>
+</Layout>
+
+<style>
+	main {
+		padding: 1rem;
+		max-width: 1400px;
+		margin: 0 auto;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+	}
+
+	/* Header Section */
+	.header-section {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		border-radius: 16px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		color: white;
+	}
+
+	.company-header {
+		display: flex;
+		align-items: center;
+		margin-bottom: 2rem;
+	}
+
+	.company-logo {
+		margin-right: 1.5rem;
+	}
+
+	.apple-icon {
+		font-size: 4rem;
+		filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+	}
+
+	.company-name {
+		font-size: 3rem;
+		font-weight: 700;
+		margin: 0;
+		text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+	}
+
+	.ticker-info {
+		display: flex;
+		gap: 2rem;
+		margin-top: 0.5rem;
+	}
+
+	.ticker, .market-cap {
+		font-size: 1.2rem;
+		opacity: 0.9;
+	}
+
+	/* Metrics Dashboard */
+	.metrics-dashboard {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.metric-card {
+		background: rgba(255, 255, 255, 0.15);
+		backdrop-filter: blur(10px);
+		border-radius: 12px;
+		padding: 1.5rem;
+		text-align: center;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+	}
+
+	.metric-value {
+		font-size: 2rem;
+		font-weight: 700;
+		margin-bottom: 0.5rem;
+	}
+
+	.metric-label {
+		font-size: 0.9rem;
+		opacity: 0.8;
+		margin-bottom: 0.5rem;
+	}
+
+	.metric-change {
+		font-size: 0.8rem;
+		padding: 0.25rem 0.5rem;
+		border-radius: 16px;
+		background: rgba(255, 255, 255, 0.2);
+	}
+
+	.metric-change.positive {
+		background: rgba(34, 197, 94, 0.3);
+	}
+
+	/* Introduction Section */
+	.intro-section {
+		background: white;
+		border-radius: 12px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.intro-section h2 {
+		color: #1f2937;
+		margin-bottom: 1rem;
+		font-size: 2rem;
+	}
+
+	.intro-text {
+		color: #6b7280;
+		font-size: 1.1rem;
+		line-height: 1.6;
+		margin-bottom: 1.5rem;
+	}
+
+	.analysis-highlights {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.highlight-item {
+		background: #f8fafc;
+		padding: 1rem;
+		border-radius: 8px;
+		border-left: 4px solid #3b82f6;
+	}
+
+	/* Business Segments Section */
+	.segments-section {
+		background: white;
+		border-radius: 12px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.segments-section h3 {
+		color: #1f2937;
+		margin-bottom: 1.5rem;
+		text-align: center;
+	}
+
+	.segments-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.segment-card {
+		background: #f8fafc;
+		border-radius: 12px;
+		padding: 1.5rem;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		border: 2px solid transparent;
+	}
+
+	.segment-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+		border-color: #3b82f6;
+	}
+
+	.segment-card.highlighted {
+		border-color: #059669;
+		background: #ecfdf5;
+		transform: translateY(-2px);
+		box-shadow: 0 8px 25px rgba(5, 150, 105, 0.2);
+	}
+
+	.segment-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+	}
+
+	.segment-header h4 {
+		margin: 0;
+		color: #1f2937;
+		font-size: 1.1rem;
+	}
+
+	.segment-percentage {
+		background: #3b82f6;
+		color: white;
+		padding: 0.25rem 0.75rem;
+		border-radius: 20px;
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+
+	.segment-revenue {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #059669;
+		margin-bottom: 1rem;
+	}
+
+	.segment-bar {
+		width: 100%;
+		height: 8px;
+		background: #e5e7eb;
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
+	.segment-fill {
+		height: 100%;
+		background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+		border-radius: 4px;
+		transition: width 0.5s ease;
+	}
+
+	/* Graph Statistics Section */
+	.stats-section {
+		background: white;
+		border-radius: 12px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.stats-section h3 {
+		color: #1f2937;
+		margin-bottom: 1.5rem;
+		text-align: center;
+	}
+
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.stat-item {
+		text-align: center;
+		padding: 1.5rem;
+		background: #f8fafc;
+		border-radius: 12px;
+		transition: transform 0.2s ease;
+	}
+
+	.stat-item:hover {
+		transform: translateY(-2px);
+		background: #e2e8f0;
+	}
+
+	.stat-number {
+		font-size: 2.5rem;
+		font-weight: 700;
+		color: #3b82f6;
+		margin-bottom: 0.5rem;
+	}
+
+	.stat-label {
+		font-size: 0.9rem;
+		color: #6b7280;
+		font-weight: 500;
+	}
+
+	/* Navigation Tabs */
+	.section-navigator {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 2rem;
+		background: white;
+		padding: 1rem;
+		border-radius: 12px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.nav-tab {
+		background: #f1f5f9;
+		border: none;
+		padding: 0.75rem 1.5rem;
+		border-radius: 8px;
+		cursor: pointer;
+		font-weight: 500;
+		transition: all 0.2s;
+		font-size: 0.9rem;
+	}
+
+	.nav-tab:hover {
+		background: #e2e8f0;
+		transform: translateY(-1px);
+	}
+
+	.nav-tab.active {
+		background: #3b82f6;
+		color: white;
+	}
+
+	/* Graph Section */
+	.graph-section {
+		background: white;
+		border-radius: 12px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.graph-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1.5rem;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	.graph-header h3 {
+		color: #1f2937;
+		margin: 0;
+	}
+
+	.graph-controls {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.control-btn {
+		background: #f1f5f9;
+		border: none;
+		padding: 0.5rem 1rem;
+		border-radius: 6px;
+		cursor: pointer;
+		font-size: 0.9rem;
+		transition: background 0.2s;
+	}
+
+	.control-btn:hover {
+		background: #e2e8f0;
+	}
+
+	.search-box {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.search-box input {
+		padding: 0.5rem;
+		border: 1px solid #d1d5db;
+		border-radius: 6px;
+		font-size: 0.9rem;
+	}
+
+	.search-box button {
+		background: #3b82f6;
+		color: white;
+		border: none;
+		padding: 0.5rem;
+		border-radius: 6px;
+		cursor: pointer;
+	}
+
+	.filter-dropdown {
+		display: flex;
+		align-items: center;
+	}
+
+	.filter-select {
+		padding: 0.5rem;
+		border: 1px solid #d1d5db;
+		border-radius: 6px;
+		font-size: 0.9rem;
+		background: white;
+		cursor: pointer;
+		min-width: 140px;
+	}
+
+	.filter-select:focus {
+		outline: none;
+		border-color: #3b82f6;
+		box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+	}
+
+	/* Graph Legend */
+	.graph-legend {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+		margin-bottom: 1.5rem;
+		padding: 1rem;
+		background: #f8fafc;
+		border-radius: 8px;
+	}
+
+	.legend-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.9rem;
+	}
+
+	.legend-color {
+		width: 16px;
+		height: 16px;
+		border-radius: 4px;
+	}
+
+	.legend-color.main-category { background: #3b82f6; }
+	.legend-color.category { background: #10b981; }
+	.legend-color.segment { background: #f59e0b; }
+	.legend-color.competitor { background: #ef4444; }
+	.legend-color.swot { background: #8b5cf6; }
+
+	/* Insights Section */
+	.insights-section {
+		background: white;
+		border-radius: 12px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.insights-section h3 {
+		color: #1f2937;
+		margin-bottom: 1.5rem;
+		text-align: center;
+	}
+
+	.insights-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.insight-card {
+		border-radius: 8px;
+		padding: 1.5rem;
+		border-left: 4px solid;
+	}
+
+	.insight-card.bullish {
+		background: #f0fdf4;
+		border-left-color: #22c55e;
+	}
+
+	.insight-card.bearish {
+		background: #fef2f2;
+		border-left-color: #ef4444;
+	}
+
+	.insight-card.neutral {
+		background: #f0f9ff;
+		border-left-color: #3b82f6;
+	}
+
+	.insight-card h4 {
+		margin-top: 0;
+		margin-bottom: 1rem;
+		font-size: 1.1rem;
+	}
+
+	.insight-card ul {
+		margin: 0;
+		padding-left: 1.5rem;
+	}
+
+	.insight-card li {
+		margin-bottom: 0.5rem;
+		line-height: 1.4;
+	}
+
+	/* Footer Info */
+	.footer-info {
+		text-align: center;
+		color: #6b7280;
+		font-size: 0.9rem;
+		padding: 1.5rem;
+		background: #f8fafc;
+		border-radius: 8px;
+	}
+
+	.footer-info p {
+		margin: 0.5rem 0;
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		main {
+			padding: 0.5rem;
+		}
+
+		.company-header {
+			flex-direction: column;
+			text-align: center;
+		}
+
+		.company-logo {
+			margin-right: 0;
+			margin-bottom: 1rem;
+		}
+
+		.company-name {
+			font-size: 2rem;
+		}
+
+		.ticker-info {
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.metrics-dashboard {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.graph-header {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.graph-controls {
+			justify-content: center;
+		}
+
+		.insights-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.segments-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.stats-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.filter-dropdown {
+			order: -1;
+			margin-bottom: 1rem;
+		}
+
+		.filter-select {
+			min-width: 100%;
+		}
+	}
+</style>
+
+<script>
+	// Navigation functionality
+	function focusSection(sectionId: string) {
+		// Update active tab
+		document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+		
+		// Focus on the specific node in the graph (this would need to be implemented in the KnowledgeGraph component)
+		console.log('Focusing on section:', sectionId);
+		// You could emit a custom event here that the KnowledgeGraph component listens to
+		window.dispatchEvent(new CustomEvent('focusNode', { detail: { nodeId: sectionId } }));
+	}
+
+	function resetGraph() {
+		console.log('Resetting graph view');
+		window.dispatchEvent(new CustomEvent('resetGraph'));
+	}
+
+	function expandAll() {
+		console.log('Expanding all nodes');
+		window.dispatchEvent(new CustomEvent('expandAll'));
+	}
+
+	function searchNodes() {
+		const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+		if (searchInput) {
+			const searchTerm = searchInput.value;
+			console.log('Searching for:', searchTerm);
+			window.dispatchEvent(new CustomEvent('searchNodes', { detail: { term: searchTerm } }));
+		}
+	}
+
+	function filterByCategory() {
+		const filterSelect = document.getElementById('categoryFilter') as HTMLSelectElement;
+		if (filterSelect) {
+			const categoryFilter = filterSelect.value;
+			console.log('Filtering by category:', categoryFilter);
+			window.dispatchEvent(new CustomEvent('filterNodes', { detail: { category: categoryFilter } }));
+		}
+	}
+
+	// Initialize event listeners when DOM is loaded
+	document.addEventListener('DOMContentLoaded', () => {
+		// Search on Enter key
+		const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+		if (searchInput) {
+			searchInput.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter') {
+					searchNodes();
+				}
+			});
+		}
+
+		// Search button click
+		const searchBtn = document.getElementById('searchBtn');
+		if (searchBtn) {
+			searchBtn.addEventListener('click', searchNodes);
+		}
+
+		// Reset button click
+		const resetBtn = document.getElementById('resetBtn');
+		if (resetBtn) {
+			resetBtn.addEventListener('click', resetGraph);
+		}
+
+		// Expand button click
+		const expandBtn = document.getElementById('expandBtn');
+		if (expandBtn) {
+			expandBtn.addEventListener('click', expandAll);
+		}
+
+		// Category filter change
+		const categoryFilter = document.getElementById('categoryFilter');
+		if (categoryFilter) {
+			categoryFilter.addEventListener('change', filterByCategory);
+		}
+
+		// Handle nav tab clicks with proper event handling
+		document.querySelectorAll('.nav-tab').forEach(tab => {
+			tab.addEventListener('click', (e) => {
+				const target = e.target as HTMLElement;
+				if (target) {
+					// Update active tab
+					document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+					target.classList.add('active');
+					
+					// Extract section ID from data attribute
+					const sectionId = target.getAttribute('data-section') || 'company_info';
+					focusSection(sectionId);
+				}
+			});
+		});
+
+		// Handle segment card clicks
+		document.querySelectorAll('.segment-card').forEach(card => {
+			card.addEventListener('click', (e) => {
+				const target = e.currentTarget as HTMLElement;
+				if (target) {
+					const segmentId = target.getAttribute('data-segment');
+					if (segmentId) {
+						// Remove previous segment highlights
+						document.querySelectorAll('.segment-card').forEach(c => c.classList.remove('highlighted'));
+						target.classList.add('highlighted');
+						
+						// Focus on the segment in the graph
+						focusSection(segmentId);
+						
+						// Show visual feedback
+						target.style.borderColor = '#059669';
+						setTimeout(() => {
+							target.style.borderColor = '#3b82f6';
+						}, 2000);
+					}
+				}
+			});
+		});
+
+		// Add segment hover analytics
+		document.querySelectorAll('.segment-card').forEach(card => {
+			card.addEventListener('mouseenter', (e) => {
+				const target = e.currentTarget as HTMLElement;
+				const segmentName = target.querySelector('h4')?.textContent;
+				console.log(`Segment hovered: ${segmentName}`);
+			});
+		});
+
+		// Animate segment bars on load
+		setTimeout(() => {
+			document.querySelectorAll('.segment-fill').forEach(fill => {
+				const element = fill as HTMLElement;
+				const width = element.style.width;
+				element.style.width = '0%';
+				setTimeout(() => {
+					element.style.width = width;
+				}, 300);
+			});
+		}, 500);
+	});
+</script>

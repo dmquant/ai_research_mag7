@@ -1,11 +1,79 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const companies = [
+	{ name: 'Apple Inc.', ticker: 'AAPL', href: '/apple' },
+	{ name: 'Tesla, Inc.', ticker: 'TSLA', href: '/tesla' },
+	{ name: 'NVIDIA Corp.', ticker: 'NVDA', href: '/nvidia' },
+	{ name: 'Microsoft Corp.', ticker: 'MSFT', href: '/microsoft' },
+	{ name: 'Amazon.com, Inc.', ticker: 'AMZN', href: '/amazon' },
+	{ name: 'Alphabet Inc.', ticker: 'GOOGL', href: '/google' },
+	{ name: 'Meta Platforms, Inc.', ticker: 'META', href: '/meta' },
+];
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="U.S. Tech Research Home">
+	<main class="home-main">
+		<div class="hero">
+			<h2>Welcome to the MAG7 AI Research Portal</h2>
+			<p>Explore detailed knowledge graphs of MAG7.</p>
+		</div>
+		<div class="card-container">
+			{companies.map(company => (
+				<a href={company.href} class="card">
+					<h3>{company.name}</h3>
+					<p>{company.ticker}</p>
+				</a>
+			))}
+		</div>
+	</main>
 </Layout>
+
+<style>
+	.home-main {
+		padding: 2rem 4rem;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+	.hero {
+		text-align: center;
+		margin-bottom: 3rem;
+	}
+	.hero h2 {
+		font-size: 2.5rem;
+		font-weight: bold;
+		color: #333;
+	}
+	.hero p {
+		font-size: 1.2rem;
+		color: #666;
+	}
+	.card-container {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 2rem;
+	}
+	.card {
+		display: block;
+		padding: 1.5rem;
+		border-radius: 8px;
+		border: 1px solid #ddd;
+		text-decoration: none;
+		color: inherit;
+		transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+	}
+	.card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	}
+	.card h3 {
+		margin-top: 0;
+		font-size: 1.5rem;
+		color: #2a62ac;
+	}
+	.card p {
+		margin-bottom: 0;
+		font-size: 1rem;
+		color: #555;
+	}
+</style>

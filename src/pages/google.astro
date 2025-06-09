@@ -1,0 +1,996 @@
+---
+import Layout from '../layouts/Layout.astro';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
+import { googleGraphElements, googleMetadata, getGraphStats } from '../data/google_data';
+
+// Extract data for dynamic content
+const { companyName, ticker, exchange, marketCap, keyMetrics, segments, sections } = googleMetadata;
+const graphStats = getGraphStats();
+---
+
+<Layout title="Alphabet Inc. (GOOGL) - Comprehensive Analysis">
+	<main>
+		<!-- Header Section -->
+		<div class="header-section">
+			<div class="company-header">
+				<div class="company-logo">
+					<span class="google-icon">🔍</span>
+				</div>
+				<div class="company-info">
+					<h1 class="company-name">{companyName}</h1>
+					<div class="ticker-info">
+						<span class="ticker">{exchange}: {ticker}</span>
+						<span class="market-cap">Market Cap: {marketCap}</span>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Key Metrics Dashboard -->
+			<div class="metrics-dashboard">
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.revenue.value}</div>
+					<div class="metric-label">{googleMetadata.latestQuarter} Revenue</div>
+					<div class={`metric-change ${keyMetrics.revenue.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.revenue.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.eps.value}</div>
+					<div class="metric-label">{googleMetadata.latestQuarter} EPS</div>
+					<div class={`metric-change ${keyMetrics.eps.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.eps.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.operatingMargin.value}</div>
+					<div class="metric-label">Operating Margin</div>
+					<div class={`metric-change ${keyMetrics.operatingMargin.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.operatingMargin.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.cloudRevenue.value}</div>
+					<div class="metric-label">Cloud Revenue</div>
+					<div class={`metric-change ${keyMetrics.cloudRevenue.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.cloudRevenue.change}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Introduction Section -->
+		<div class="intro-section">
+			<h2>Comprehensive Investment Analysis</h2>
+			<p class="intro-text">
+				Explore Alphabet's complete business landscape through our interactive knowledge graph. This analysis covers 
+				Google's financial performance, AI strategy, regulatory challenges, competitive positioning, and strategic 
+				outlook based on the latest {googleMetadata.latestQuarter} earnings and market developments.
+			</p>
+			
+			<div class="analysis-highlights">
+				<div class="highlight-item">
+					<strong>🚀 Key Catalysts:</strong> Gemini AI platform, Cloud profitability, $32B Wiz acquisition, AI infrastructure investment
+				</div>
+				<div class="highlight-item">
+					<strong>💪 Strengths:</strong> {marketCap} market cap, >90% search market share, $125B net cash position, AI research leadership
+				</div>
+				<div class="highlight-item">
+					<strong>⚠️ Watch Points:</strong> DOJ antitrust cases, regulatory breakup risk, AI competition from Microsoft/OpenAI
+				</div>
+			</div>
+		</div>
+
+		<!-- Business Segments Overview -->
+		<div class="segments-section">
+			<h3>Revenue Breakdown by Segment</h3>
+			<div class="segments-grid">
+				{segments.map((segment) => (
+					<div class="segment-card" data-segment={segment.id}>
+						<div class="segment-header">
+							<h4>{segment.name}</h4>
+							<span class="segment-percentage">{segment.percentage}%</span>
+						</div>
+						<div class="segment-revenue">{segment.revenue}</div>
+						<div class="segment-bar">
+							<div 
+								class="segment-fill" 
+								style={`width: ${segment.percentage * 2}%`}
+							></div>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+
+		<!-- Navigation Tabs -->
+		<div class="section-navigator">
+			{sections.map((section, index) => (
+				<button 
+					class={`nav-tab ${index === 0 ? 'active' : ''}`}
+					data-section={section.id}
+					data-priority={section.priority}
+				>
+					{section.icon} {section.name}
+				</button>
+			))}
+		</div>
+
+		<!-- Graph Statistics -->
+		<div class="stats-section">
+			<h3>Analysis Coverage</h3>
+			<div class="stats-grid">
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.totalNodes}</div>
+					<div class="stat-label">Analysis Points</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.mainSections}</div>
+					<div class="stat-label">Main Sections</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.businessSegments}</div>
+					<div class="stat-label">Business Segments</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.competitors}</div>
+					<div class="stat-label">Key Competitors</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.swotElements}</div>
+					<div class="stat-label">SWOT Elements</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.totalEdges}</div>
+					<div class="stat-label">Relationships</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Knowledge Graph Section -->
+		<div class="graph-section">
+			<div class="graph-header">
+				<h3>Interactive Knowledge Graph</h3>
+				<div class="graph-controls">
+					<button class="control-btn" id="resetBtn">
+						🔄 Reset View
+					</button>
+					<button class="control-btn" id="expandBtn">
+						🔍 Expand All
+					</button>
+					<div class="filter-dropdown">
+						<select id="categoryFilter" class="filter-select">
+							<option value="">All Categories</option>
+							<option value="main_category">Main Sections</option>
+							<option value="segment">Business Segments</option>
+							<option value="competitor">Competitors</option>
+							<option value="swot_strength">Strengths</option>
+							<option value="swot_weakness">Weaknesses</option>
+							<option value="swot_opportunity">Opportunities</option>
+							<option value="swot_threat">Threats</option>
+						</select>
+					</div>
+					<div class="search-box">
+						<input type="text" id="searchInput" placeholder="Search nodes..." />
+						<button id="searchBtn">🔍</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class="graph-legend">
+				<div class="legend-item">
+					<span class="legend-color main-category"></span>
+					<span>Main Categories</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color category"></span>
+					<span>Analysis Areas</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color segment"></span>
+					<span>Business Segments</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color competitor"></span>
+					<span>Competitors</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color swot"></span>
+					<span>SWOT Elements</span>
+				</div>
+			</div>
+
+			<div class="graph-container">
+				<KnowledgeGraph elements={googleGraphElements} containerId="google-knowledge-graph" />
+			</div>
+		</div>
+
+		<!-- Key Insights Section -->
+		<div class="insights-section">
+			<h3>Key Investment Insights</h3>
+			<div class="insights-grid">
+				<div class="insight-card bullish">
+					<div class="insight-header">
+						<span class="insight-icon">📈</span>
+						<h4>Bullish Factors</h4>
+					</div>
+					<ul class="insight-list">
+						<li>AI leadership with Gemini platform gaining traction (1.5B users)</li>
+						<li>Google Cloud profitability and 28% growth trajectory</li>
+						<li>Undervalued at 19x P/E vs 35x for Microsoft</li>
+						<li>$125B net cash enables strategic investments</li>
+						<li>Search dominance remains intact despite AI threats</li>
+					</ul>
+				</div>
+				<div class="insight-card bearish">
+					<div class="insight-header">
+						<span class="insight-icon">📉</span>
+						<h4>Risk Factors</h4>
+					</div>
+					<ul class="insight-list">
+						<li>DOJ antitrust cases threaten core ad business</li>
+						<li>Potential forced breakup of advertising operations</li>
+						<li>Microsoft/OpenAI gaining enterprise AI traction</li>
+						<li>Privacy regulations limiting ad targeting</li>
+						<li>79% revenue dependence on advertising</li>
+					</ul>
+				</div>
+				<div class="insight-card neutral">
+					<div class="insight-header">
+						<span class="insight-icon">⚖️</span>
+						<h4>Key Monitors</h4>
+					</div>
+					<ul class="insight-list">
+						<li>Regulatory case outcomes and appeal timeline</li>
+						<li>AI competition impact on search usage</li>
+						<li>Cloud market share gains vs AWS/Azure</li>
+						<li>Waymo commercialization progress</li>
+						<li>Ad spending resilience in economic cycles</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- Recent Developments Timeline -->
+		<div class="timeline-section">
+			<h3>Recent Developments Timeline</h3>
+			<div class="timeline">
+				<div class="timeline-item">
+					<div class="timeline-date">May 2025</div>
+					<div class="timeline-content">
+						<h4>Google I/O Conference</h4>
+						<p>Showcased Gemini 2.5 AI capabilities and announced AI Mode expansion across products</p>
+					</div>
+				</div>
+				<div class="timeline-item">
+					<div class="timeline-date">April 2025</div>
+					<div class="timeline-content">
+						<h4>DOJ Antitrust Ruling</h4>
+						<p>Federal court ruled Google illegally monopolized digital advertising market</p>
+					</div>
+				</div>
+				<div class="timeline-item">
+					<div class="timeline-date">April 2025</div>
+					<div class="timeline-content">
+						<h4>Q1 2025 Earnings Beat</h4>
+						<p>$90.2B revenue (+12% YoY), $2.81 EPS, announced $70B share buyback</p>
+					</div>
+				</div>
+				<div class="timeline-item">
+					<div class="timeline-date">March 2025</div>
+					<div class="timeline-content">
+						<h4>Wiz Acquisition Announced</h4>
+						<p>$32B acquisition of cybersecurity firm to strengthen Google Cloud security</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+</Layout>
+
+<style>
+	/* Base Styles */
+	main {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 2rem;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		line-height: 1.6;
+		color: #333;
+	}
+
+	/* Header Section */
+	.header-section {
+		background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+		border-radius: 16px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		color: white;
+	}
+
+	.company-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 2rem;
+	}
+
+	.company-logo {
+		background: rgba(255, 255, 255, 0.2);
+		border-radius: 12px;
+		padding: 1rem;
+		backdrop-filter: blur(10px);
+	}
+
+	.google-icon {
+		font-size: 2rem;
+		display: block;
+	}
+
+	.company-name {
+		font-size: 2.5rem;
+		font-weight: 700;
+		margin: 0;
+		background: linear-gradient(90deg, #fff 0%, #e8f0fe 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.ticker-info {
+		display: flex;
+		gap: 2rem;
+		margin-top: 0.5rem;
+	}
+
+	.ticker, .market-cap {
+		font-size: 1.1rem;
+		font-weight: 500;
+		opacity: 0.9;
+	}
+
+	/* Metrics Dashboard */
+	.metrics-dashboard {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1rem;
+	}
+
+	.metric-card {
+		background: rgba(255, 255, 255, 0.15);
+		border-radius: 12px;
+		padding: 1.5rem;
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		transition: transform 0.2s ease;
+	}
+
+	.metric-card:hover {
+		transform: translateY(-2px);
+	}
+
+	.metric-value {
+		font-size: 2rem;
+		font-weight: 700;
+		margin-bottom: 0.5rem;
+	}
+
+	.metric-label {
+		font-size: 0.9rem;
+		opacity: 0.8;
+		margin-bottom: 0.5rem;
+	}
+
+	.metric-change {
+		font-size: 0.85rem;
+		font-weight: 600;
+		padding: 0.25rem 0.5rem;
+		border-radius: 6px;
+		background: rgba(255, 255, 255, 0.2);
+		display: inline-block;
+	}
+
+	.metric-change.positive {
+		background: rgba(52, 168, 83, 0.3);
+		color: #34a853;
+	}
+
+	/* Introduction Section */
+	.intro-section {
+		margin-bottom: 3rem;
+	}
+
+	.intro-section h2 {
+		font-size: 2rem;
+		margin-bottom: 1rem;
+		color: #1a1a1a;
+	}
+
+	.intro-text {
+		font-size: 1.1rem;
+		color: #666;
+		margin-bottom: 2rem;
+		line-height: 1.7;
+	}
+
+	.analysis-highlights {
+		display: grid;
+		gap: 1rem;
+		margin-top: 2rem;
+	}
+
+	.highlight-item {
+		background: #f8f9fa;
+		border-left: 4px solid #4285f4;
+		padding: 1rem 1.5rem;
+		border-radius: 0 8px 8px 0;
+		font-size: 0.95rem;
+	}
+
+	/* Business Segments */
+	.segments-section {
+		margin-bottom: 3rem;
+	}
+
+	.segments-section h3 {
+		font-size: 1.5rem;
+		margin-bottom: 1.5rem;
+		color: #1a1a1a;
+	}
+
+	.segments-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1rem;
+	}
+
+	.segment-card {
+		background: white;
+		border: 2px solid #e8f0fe;
+		border-radius: 12px;
+		padding: 1.5rem;
+		transition: all 0.3s ease;
+		cursor: pointer;
+	}
+
+	.segment-card:hover {
+		border-color: #4285f4;
+		transform: translateY(-2px);
+		box-shadow: 0 8px 25px rgba(66, 133, 244, 0.15);
+	}
+
+	.segment-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+	}
+
+	.segment-header h4 {
+		margin: 0;
+		color: #1a1a1a;
+		font-size: 1.1rem;
+	}
+
+	.segment-percentage {
+		background: #4285f4;
+		color: white;
+		padding: 0.25rem 0.75rem;
+		border-radius: 20px;
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+
+	.segment-revenue {
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: #34a853;
+		margin-bottom: 1rem;
+	}
+
+	.segment-bar {
+		background: #e8f0fe;
+		height: 6px;
+		border-radius: 3px;
+		overflow: hidden;
+	}
+
+	.segment-fill {
+		background: linear-gradient(90deg, #4285f4, #34a853);
+		height: 100%;
+		border-radius: 3px;
+		transition: width 0.8s ease;
+	}
+
+	/* Navigation Tabs */
+	.section-navigator {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 2rem;
+		padding: 1rem;
+		background: #f8f9fa;
+		border-radius: 12px;
+	}
+
+	.nav-tab {
+		background: white;
+		border: 2px solid #e8f0fe;
+		border-radius: 8px;
+		padding: 0.75rem 1rem;
+		font-size: 0.9rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.nav-tab:hover {
+		border-color: #4285f4;
+		background: #e8f0fe;
+	}
+
+	.nav-tab.active {
+		background: #4285f4;
+		color: white;
+		border-color: #4285f4;
+	}
+
+	/* Stats Section */
+	.stats-section {
+		margin-bottom: 3rem;
+	}
+
+	.stats-section h3 {
+		font-size: 1.5rem;
+		margin-bottom: 1.5rem;
+		color: #1a1a1a;
+	}
+
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		gap: 1rem;
+	}
+
+	.stat-item {
+		text-align: center;
+		background: white;
+		border: 2px solid #e8f0fe;
+		border-radius: 12px;
+		padding: 1.5rem 1rem;
+		transition: all 0.3s ease;
+	}
+
+	.stat-item:hover {
+		border-color: #4285f4;
+		transform: translateY(-2px);
+	}
+
+	.stat-number {
+		font-size: 2rem;
+		font-weight: 700;
+		color: #4285f4;
+		margin-bottom: 0.5rem;
+	}
+
+	.stat-label {
+		font-size: 0.9rem;
+		color: #666;
+		font-weight: 500;
+	}
+
+	/* Graph Section */
+	.graph-section {
+		margin-bottom: 3rem;
+	}
+
+	.graph-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	.graph-header h3 {
+		font-size: 1.5rem;
+		color: #1a1a1a;
+		margin: 0;
+	}
+
+	.graph-controls {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.control-btn {
+		background: #4285f4;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 0.5rem 1rem;
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: background 0.2s ease;
+	}
+
+	.control-btn:hover {
+		background: #3367d6;
+	}
+
+	.filter-select {
+		padding: 0.5rem;
+		border: 2px solid #e8f0fe;
+		border-radius: 8px;
+		font-size: 0.9rem;
+		background: white;
+	}
+
+	.search-box {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.search-box input {
+		padding: 0.5rem;
+		border: 2px solid #e8f0fe;
+		border-radius: 8px;
+		font-size: 0.9rem;
+		width: 150px;
+	}
+
+	.search-box button {
+		background: #34a853;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 0.5rem;
+		cursor: pointer;
+	}
+
+	/* Graph Legend */
+	.graph-legend {
+		display: flex;
+		gap: 1.5rem;
+		margin-bottom: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.legend-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.9rem;
+	}
+
+	.legend-color {
+		width: 16px;
+		height: 16px;
+		border-radius: 4px;
+	}
+
+	.legend-color.main-category { background: #4285f4; }
+	.legend-color.category { background: #34a853; }
+	.legend-color.segment { background: #ea4335; }
+	.legend-color.competitor { background: #ff9800; }
+	.legend-color.swot { background: #9c27b0; }
+
+	.graph-container {
+		border: 2px solid #e8f0fe;
+		border-radius: 12px;
+		overflow: hidden;
+	}
+
+	/* Insights Section */
+	.insights-section {
+		margin-bottom: 3rem;
+	}
+
+	.insights-section h3 {
+		font-size: 1.5rem;
+		margin-bottom: 1.5rem;
+		color: #1a1a1a;
+	}
+
+	.insights-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.insight-card {
+		background: white;
+		border-radius: 12px;
+		padding: 1.5rem;
+		border-left: 4px solid;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.insight-card.bullish { border-left-color: #34a853; }
+	.insight-card.bearish { border-left-color: #ea4335; }
+	.insight-card.neutral { border-left-color: #ff9800; }
+
+	.insight-header {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-bottom: 1rem;
+	}
+
+	.insight-icon {
+		font-size: 1.5rem;
+	}
+
+	.insight-header h4 {
+		margin: 0;
+		font-size: 1.1rem;
+	}
+
+	.insight-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.insight-list li {
+		padding: 0.5rem 0;
+		font-size: 0.95rem;
+		line-height: 1.4;
+		border-bottom: 1px solid #f0f0f0;
+	}
+
+	.insight-list li:last-child {
+		border-bottom: none;
+	}
+
+	.insight-list li::before {
+		content: "•";
+		color: #4285f4;
+		margin-right: 0.5rem;
+		font-weight: bold;
+	}
+
+	/* Timeline Section */
+	.timeline-section {
+		margin-bottom: 3rem;
+	}
+
+	.timeline-section h3 {
+		font-size: 1.5rem;
+		margin-bottom: 1.5rem;
+		color: #1a1a1a;
+	}
+
+	.timeline {
+		position: relative;
+		padding-left: 2rem;
+	}
+
+	.timeline::before {
+		content: '';
+		position: absolute;
+		left: 0.5rem;
+		top: 0;
+		bottom: 0;
+		width: 2px;
+		background: #4285f4;
+	}
+
+	.timeline-item {
+		position: relative;
+		margin-bottom: 2rem;
+		background: white;
+		border: 2px solid #e8f0fe;
+		border-radius: 12px;
+		padding: 1.5rem;
+		margin-left: 1rem;
+	}
+
+	.timeline-item::before {
+		content: '';
+		position: absolute;
+		left: -2.25rem;
+		top: 1.5rem;
+		width: 12px;
+		height: 12px;
+		background: #4285f4;
+		border-radius: 50%;
+		border: 3px solid white;
+	}
+
+	.timeline-date {
+		font-size: 0.85rem;
+		color: #4285f4;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+	}
+
+	.timeline-content h4 {
+		margin: 0 0 0.5rem 0;
+		color: #1a1a1a;
+		font-size: 1.1rem;
+	}
+
+	.timeline-content p {
+		margin: 0;
+		color: #666;
+		line-height: 1.5;
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		main {
+			padding: 1rem;
+		}
+
+		.company-header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 1rem;
+		}
+
+		.company-name {
+			font-size: 2rem;
+		}
+
+		.ticker-info {
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.metrics-dashboard {
+			grid-template-columns: 1fr;
+		}
+
+		.segments-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.insights-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.graph-controls {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.timeline {
+			padding-left: 1rem;
+		}
+
+		.timeline-item {
+			margin-left: 0.5rem;
+		}
+	}
+
+	/* Animation */
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.segment-card,
+	.metric-card,
+	.stat-item,
+	.insight-card,
+	.timeline-item {
+		animation: fadeInUp 0.6s ease forwards;
+	}
+
+	.segment-card:nth-child(2) { animation-delay: 0.1s; }
+	.segment-card:nth-child(3) { animation-delay: 0.2s; }
+	.segment-card:nth-child(4) { animation-delay: 0.3s; }
+</style>
+
+<script>
+	// Navigation functionality
+	document.addEventListener('DOMContentLoaded', () => {
+		const navTabs = document.querySelectorAll('.nav-tab') as NodeListOf<HTMLElement>;
+		const segmentCards = document.querySelectorAll('.segment-card') as NodeListOf<HTMLElement>;
+		
+		// Tab navigation
+		navTabs.forEach(tab => {
+			tab.addEventListener('click', () => {
+				navTabs.forEach(t => t.classList.remove('active'));
+				tab.classList.add('active');
+				
+				// Scroll to relevant section (basic implementation)
+				const sectionId = tab.dataset.section;
+				console.log(`Navigate to section: ${sectionId}`);
+			});
+		});
+		
+		// Segment card interactions
+		segmentCards.forEach(card => {
+			card.addEventListener('click', () => {
+				const segmentId = card.dataset.segment;
+				console.log(`Selected segment: ${segmentId}`);
+				
+				// Add visual feedback
+				segmentCards.forEach(c => c.classList.remove('selected'));
+				card.classList.add('selected');
+			});
+		});
+		
+		// Graph controls
+		const resetBtn = document.getElementById('resetBtn') as HTMLButtonElement;
+		const expandBtn = document.getElementById('expandBtn') as HTMLButtonElement;
+		const categoryFilter = document.getElementById('categoryFilter') as HTMLSelectElement;
+		const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+		const searchBtn = document.getElementById('searchBtn') as HTMLButtonElement;
+		
+		if (resetBtn) {
+			resetBtn.addEventListener('click', () => {
+				console.log('Reset graph view');
+				// Reset graph implementation
+			});
+		}
+		
+		if (expandBtn) {
+			expandBtn.addEventListener('click', () => {
+				console.log('Expand all nodes');
+				// Expand implementation
+			});
+		}
+		
+		if (categoryFilter) {
+			categoryFilter.addEventListener('change', (e) => {
+				const target = e.target as HTMLSelectElement;
+				console.log(`Filter by category: ${target.value}`);
+				// Filter implementation
+			});
+		}
+		
+		if (searchBtn && searchInput) {
+			searchBtn.addEventListener('click', () => {
+				const query = searchInput.value;
+				console.log(`Search for: ${query}`);
+				// Search implementation
+			});
+		}
+		
+		// Enter key search
+		if (searchInput) {
+			searchInput.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter') {
+					const target = e.target as HTMLInputElement;
+					const query = target.value;
+					console.log(`Search for: ${query}`);
+					// Search implementation
+				}
+			});
+		}
+		
+		// Animate elements on scroll
+		const observerOptions = {
+			threshold: 0.1,
+			rootMargin: '0px 0px -50px 0px'
+		};
+		
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					const element = entry.target as HTMLElement;
+					element.style.animationPlayState = 'running';
+				}
+			});
+		}, observerOptions);
+		
+		// Observe animated elements
+		document.querySelectorAll('.segment-card, .metric-card, .stat-item, .insight-card, .timeline-item').forEach(el => {
+			observer.observe(el);
+		});
+	});
+</script> 

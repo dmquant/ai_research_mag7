@@ -1,0 +1,799 @@
+---
+import Layout from '../layouts/Layout.astro';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
+import { nvidiaGraphElements, nvidiaMetadata, getGraphStats } from '../data/nvidia_data';
+
+// Extract data for dynamic content
+const { companyName, ticker, exchange, marketCap, latestQuarter, keyMetrics, segments, sections } = nvidiaMetadata;
+const graphStats = getGraphStats();
+---
+
+<Layout title="NVIDIA Corporation (NVDA) - Comprehensive Analysis">
+	<main>
+		<!-- Header Section -->
+		<div class="header-section">
+			<div class="company-header">
+				<div class="company-logo">
+					<span class="nvidia-icon">⚡</span>
+				</div>
+				<div class="company-info">
+					<h1 class="company-name">{companyName}</h1>
+					<div class="ticker-info">
+						<span class="ticker">{exchange}: {ticker}</span>
+						<span class="market-cap">Market Cap: {marketCap}</span>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Key Metrics Dashboard -->
+			<div class="metrics-dashboard">
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.revenue.value}</div>
+					<div class="metric-label">{latestQuarter} Revenue</div>
+					<div class={`metric-change ${keyMetrics.revenue.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.revenue.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.eps.value}</div>
+					<div class="metric-label">{latestQuarter} EPS</div>
+					<div class={`metric-change ${keyMetrics.eps.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.eps.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.grossMargin.value}</div>
+					<div class="metric-label">Gross Margin</div>
+					<div class={`metric-change ${keyMetrics.grossMargin.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.grossMargin.change}
+					</div>
+				</div>
+				<div class="metric-card">
+					<div class="metric-value">{keyMetrics.datacenterRevenue.value}</div>
+					<div class="metric-label">Data Center Revenue</div>
+					<div class={`metric-change ${keyMetrics.datacenterRevenue.isPositive ? 'positive' : ''}`}>
+						{keyMetrics.datacenterRevenue.change}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Introduction Section -->
+		<div class="intro-section">
+			<h2>Comprehensive Investment Analysis</h2>
+			<p class="intro-text">
+				Explore NVIDIA's complete business landscape through our interactive knowledge graph. This analysis covers NVIDIA's 
+				explosive growth in AI computing, financial performance, business segments, competitive positioning, market opportunities, 
+				and strategic outlook based on the latest {latestQuarter} earnings and Blackwell architecture developments.
+			</p>
+			
+			<div class="analysis-highlights">
+				<div class="highlight-item">
+					<strong>🚀 Key Catalysts:</strong> Blackwell architecture ramp, AI infrastructure buildout, sovereign AI demand
+				</div>
+				<div class="highlight-item">
+					<strong>💪 Strengths:</strong> {marketCap} market cap, {segments[0].percentage}% Data Center revenue share, 71%+ gross margins
+				</div>
+				<div class="highlight-item">
+					<strong>⚠️ Watch Points:</strong> China restrictions ($8B impact), competitive pressure, valuation concerns
+				</div>
+			</div>
+		</div>
+
+		<!-- Business Segments Overview -->
+		<div class="segments-section">
+			<h3>Revenue Breakdown by Segment</h3>
+			<div class="segments-grid">
+				{segments.map((segment) => (
+					<div class="segment-card" data-segment={segment.id}>
+						<div class="segment-header">
+							<h4>{segment.name}</h4>
+							<span class="segment-percentage">{segment.percentage}%</span>
+						</div>
+						<div class="segment-revenue">{segment.revenue}</div>
+						<div class="segment-bar">
+							<div 
+								class="segment-fill" 
+								style={`width: ${segment.percentage * 2}%`}
+							></div>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+
+		<!-- Navigation Tabs -->
+		<div class="section-navigator">
+			{sections.map((section, index) => (
+				<button 
+					class={`nav-tab ${index === 0 ? 'active' : ''}`}
+					data-section={section.id}
+					data-priority={section.priority}
+				>
+					{section.icon} {section.name}
+				</button>
+			))}
+		</div>
+
+		<!-- Graph Statistics -->
+		<div class="stats-section">
+			<h3>Analysis Coverage</h3>
+			<div class="stats-grid">
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.totalNodes}</div>
+					<div class="stat-label">Analysis Points</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.mainSections}</div>
+					<div class="stat-label">Main Sections</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.businessSegments}</div>
+					<div class="stat-label">Business Segments</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.competitors}</div>
+					<div class="stat-label">Key Competitors</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.swotElements}</div>
+					<div class="stat-label">SWOT Elements</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">{graphStats.totalEdges}</div>
+					<div class="stat-label">Relationships</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Knowledge Graph Section -->
+		<div class="graph-section">
+			<div class="graph-header">
+				<h3>Interactive Knowledge Graph</h3>
+				<div class="graph-controls">
+					<button class="control-btn" id="resetBtn">
+						🔄 Reset View
+					</button>
+					<button class="control-btn" id="expandBtn">
+						🔍 Expand All
+					</button>
+					<div class="filter-dropdown">
+						<select id="categoryFilter" class="filter-select">
+							<option value="">All Categories</option>
+							<option value="main_category">Main Sections</option>
+							<option value="segment">Business Segments</option>
+							<option value="competitor">Competitors</option>
+							<option value="swot_strength">Strengths</option>
+							<option value="swot_weakness">Weaknesses</option>
+							<option value="swot_opportunity">Opportunities</option>
+							<option value="swot_threat">Threats</option>
+						</select>
+					</div>
+					<div class="search-box">
+						<input type="text" id="searchInput" placeholder="Search nodes..." />
+						<button id="searchBtn">🔍</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class="graph-legend">
+				<div class="legend-item">
+					<span class="legend-color main-category"></span>
+					<span>Main Categories</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color category"></span>
+					<span>Analysis Areas</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color segment"></span>
+					<span>Business Segments</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color competitor"></span>
+					<span>Competitors</span>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color swot"></span>
+					<span>SWOT Elements</span>
+				</div>
+			</div>
+
+			<!-- Main Knowledge Graph Component -->
+			<KnowledgeGraph elements={nvidiaGraphElements} containerId="nvidia-graph" />
+		</div>
+
+		<!-- Section Details -->
+		<div class="section-details">
+			<h3>Detailed Analysis Sections</h3>
+			<div class="details-grid">
+				{sections.map((section) => (
+					<div class="detail-card" data-section={section.id}>
+						<div class="detail-header">
+							<span class="detail-icon">{section.icon}</span>
+							<h4>{section.name}</h4>
+						</div>
+						<div class="detail-description">
+							Click to explore this section in the knowledge graph
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+
+		<!-- Footer Insights -->
+		<div class="insights-footer">
+			<div class="insight-note">
+				<strong>💡 Key Insight:</strong> NVIDIA has transformed from a gaming GPU company to the dominant force in AI infrastructure, 
+				with Data Center revenue growing from $15B to $115B in just 2 years (2023-2025). The company's CUDA software moat and 
+				Blackwell architecture position it uniquely for the AI revolution.
+			</div>
+		</div>
+	</main>
+</Layout>
+
+<style>
+	/* Main Layout */
+	main {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 2rem;
+		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	}
+
+	/* Header Section */
+	.header-section {
+		background: linear-gradient(135deg, #1a1a1a 0%, #2d4a3e 100%);
+		border-radius: 16px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		color: white;
+	}
+
+	.company-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 2rem;
+	}
+
+	.nvidia-icon {
+		font-size: 3rem;
+		background: linear-gradient(45deg, #76B900, #00D084);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.company-name {
+		font-size: 2.5rem;
+		font-weight: 700;
+		margin: 0;
+		background: linear-gradient(45deg, #76B900, #00D084);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.ticker-info {
+		display: flex;
+		gap: 1rem;
+		font-size: 1.1rem;
+		opacity: 0.9;
+	}
+
+	.ticker {
+		font-weight: 600;
+	}
+
+	/* Metrics Dashboard */
+	.metrics-dashboard {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 1rem;
+	}
+
+	.metric-card {
+		background: rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
+		padding: 1.5rem;
+		text-align: center;
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+	}
+
+	.metric-value {
+		font-size: 2rem;
+		font-weight: 700;
+		margin-bottom: 0.5rem;
+		color: #76B900;
+	}
+
+	.metric-label {
+		font-size: 0.9rem;
+		opacity: 0.8;
+		margin-bottom: 0.5rem;
+	}
+
+	.metric-change {
+		font-size: 0.85rem;
+		font-weight: 600;
+	}
+
+	.metric-change.positive {
+		color: #22c55e;
+	}
+
+	/* Introduction Section */
+	.intro-section {
+		background: #f8fafc;
+		border-radius: 16px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+	}
+
+	.intro-section h2 {
+		font-size: 2rem;
+		margin-bottom: 1rem;
+		color: #1e293b;
+	}
+
+	.intro-text {
+		font-size: 1.1rem;
+		line-height: 1.6;
+		color: #475569;
+		margin-bottom: 1.5rem;
+	}
+
+	.analysis-highlights {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.highlight-item {
+		background: white;
+		padding: 1rem;
+		border-radius: 8px;
+		border-left: 4px solid #76B900;
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+
+	/* Segments Section */
+	.segments-section {
+		margin-bottom: 2rem;
+	}
+
+	.segments-section h3 {
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+		color: #1e293b;
+	}
+
+	.segments-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1rem;
+	}
+
+	.segment-card {
+		background: white;
+		border-radius: 12px;
+		padding: 1.5rem;
+		border: 1px solid #e2e8f0;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.segment-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+		border-color: #76B900;
+	}
+
+	.segment-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.5rem;
+	}
+
+	.segment-header h4 {
+		margin: 0;
+		font-size: 1.1rem;
+		color: #1e293b;
+	}
+
+	.segment-percentage {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #76B900;
+	}
+
+	.segment-revenue {
+		font-size: 1.2rem;
+		font-weight: 600;
+		color: #475569;
+		margin-bottom: 1rem;
+	}
+
+	.segment-bar {
+		height: 6px;
+		background: #e2e8f0;
+		border-radius: 3px;
+		overflow: hidden;
+	}
+
+	.segment-fill {
+		height: 100%;
+		background: linear-gradient(45deg, #76B900, #00D084);
+		border-radius: 3px;
+		transition: width 0.3s ease;
+	}
+
+	/* Navigation Tabs */
+	.section-navigator {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 2rem;
+		background: #f1f5f9;
+		padding: 1rem;
+		border-radius: 12px;
+	}
+
+	.nav-tab {
+		background: white;
+		border: 1px solid #e2e8f0;
+		border-radius: 8px;
+		padding: 0.75rem 1rem;
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.nav-tab:hover {
+		background: #76B900;
+		color: white;
+		border-color: #76B900;
+	}
+
+	.nav-tab.active {
+		background: #76B900;
+		color: white;
+		border-color: #76B900;
+	}
+
+	/* Statistics Section */
+	.stats-section {
+		margin-bottom: 2rem;
+	}
+
+	.stats-section h3 {
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+		color: #1e293b;
+	}
+
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		gap: 1rem;
+	}
+
+	.stat-item {
+		background: white;
+		border-radius: 12px;
+		padding: 1.5rem;
+		text-align: center;
+		border: 1px solid #e2e8f0;
+	}
+
+	.stat-number {
+		font-size: 2rem;
+		font-weight: 700;
+		color: #76B900;
+		margin-bottom: 0.5rem;
+	}
+
+	.stat-label {
+		font-size: 0.9rem;
+		color: #64748b;
+	}
+
+	/* Graph Section */
+	.graph-section {
+		background: white;
+		border-radius: 16px;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		border: 1px solid #e2e8f0;
+	}
+
+	.graph-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	.graph-header h3 {
+		font-size: 1.5rem;
+		color: #1e293b;
+		margin: 0;
+	}
+
+	.graph-controls {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.control-btn {
+		background: #76B900;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 0.5rem 1rem;
+		cursor: pointer;
+		font-size: 0.9rem;
+		transition: background 0.3s ease;
+	}
+
+	.control-btn:hover {
+		background: #659900;
+	}
+
+	.filter-select {
+		padding: 0.5rem;
+		border: 1px solid #e2e8f0;
+		border-radius: 8px;
+		font-size: 0.9rem;
+	}
+
+	.search-box {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.search-box input {
+		padding: 0.5rem;
+		border: 1px solid #e2e8f0;
+		border-radius: 8px;
+		font-size: 0.9rem;
+		width: 200px;
+	}
+
+	.search-box button {
+		background: #76B900;
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 0.5rem;
+		cursor: pointer;
+	}
+
+	/* Graph Legend */
+	.graph-legend {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin-bottom: 2rem;
+		padding: 1rem;
+		background: #f8fafc;
+		border-radius: 8px;
+	}
+
+	.legend-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.9rem;
+	}
+
+	.legend-color {
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		border: 2px solid #333;
+	}
+
+	.legend-color.main-category { background: #3b82f6; }
+	.legend-color.category { background: #10b981; }
+	.legend-color.segment { background: #f59e0b; }
+	.legend-color.competitor { background: #ef4444; }
+	.legend-color.swot { background: #8b5cf6; }
+
+	/* Section Details */
+	.section-details {
+		margin-bottom: 2rem;
+	}
+
+	.section-details h3 {
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+		color: #1e293b;
+	}
+
+	.details-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 1rem;
+	}
+
+	.detail-card {
+		background: white;
+		border-radius: 12px;
+		padding: 1.5rem;
+		border: 1px solid #e2e8f0;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.detail-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+		border-color: #76B900;
+	}
+
+	.detail-header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.detail-icon {
+		font-size: 1.5rem;
+	}
+
+	.detail-header h4 {
+		margin: 0;
+		color: #1e293b;
+	}
+
+	.detail-description {
+		font-size: 0.9rem;
+		color: #64748b;
+		line-height: 1.4;
+	}
+
+	/* Insights Footer */
+	.insights-footer {
+		background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+		border-radius: 16px;
+		padding: 2rem;
+		color: white;
+	}
+
+	.insight-note {
+		font-size: 1rem;
+		line-height: 1.6;
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		main {
+			padding: 1rem;
+		}
+
+		.company-header {
+			flex-direction: column;
+			text-align: center;
+		}
+
+		.company-name {
+			font-size: 2rem;
+		}
+
+		.metrics-dashboard {
+			grid-template-columns: 1fr;
+		}
+
+		.graph-header {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.graph-controls {
+			justify-content: center;
+		}
+
+		.search-box input {
+			width: 150px;
+		}
+
+		.segments-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.stats-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>
+
+<script>
+	// Interactive functionality
+	document.addEventListener('DOMContentLoaded', function() {
+		// Navigation tab functionality
+		const navTabs = document.querySelectorAll('.nav-tab');
+		navTabs.forEach(tab => {
+			tab.addEventListener('click', function(this: HTMLElement) {
+				navTabs.forEach(t => t.classList.remove('active'));
+				this.classList.add('active');
+				
+				const sectionId = this.dataset.section;
+				// Here you would implement graph filtering/highlighting logic
+				console.log('Navigating to section:', sectionId);
+			});
+		});
+
+		// Segment card click functionality
+		const segmentCards = document.querySelectorAll('.segment-card');
+		segmentCards.forEach(card => {
+			card.addEventListener('click', function(this: HTMLElement) {
+				const segmentId = this.dataset.segment;
+				// Here you would implement segment highlighting in graph
+				console.log('Highlighting segment:', segmentId);
+			});
+		});
+
+		// Detail card click functionality
+		const detailCards = document.querySelectorAll('.detail-card');
+		detailCards.forEach(card => {
+			card.addEventListener('click', function(this: HTMLElement) {
+				const sectionId = this.dataset.section;
+				// Here you would implement section navigation in graph
+				console.log('Exploring section:', sectionId);
+			});
+		});
+
+		// Control button functionality
+		const resetBtn = document.getElementById('resetBtn');
+		const expandBtn = document.getElementById('expandBtn');
+		const categoryFilter = document.getElementById('categoryFilter');
+		const searchInput = document.getElementById('searchInput');
+		const searchBtn = document.getElementById('searchBtn');
+
+		if (resetBtn) {
+			resetBtn.addEventListener('click', function() {
+				// Reset graph view
+				console.log('Resetting graph view');
+			});
+		}
+
+		if (expandBtn) {
+			expandBtn.addEventListener('click', function() {
+				// Expand all nodes
+				console.log('Expanding all nodes');
+			});
+		}
+
+		if (categoryFilter) {
+			categoryFilter.addEventListener('change', function() {
+				// Filter by category
+				console.log('Filtering by category:', (this as HTMLSelectElement).value);
+			});
+		}
+
+		if (searchBtn && searchInput) {
+			searchBtn.addEventListener('click', function() {
+				// Search functionality
+				console.log('Searching for:', (searchInput as HTMLInputElement).value);
+			});
+
+			searchInput.addEventListener('keypress', function(e) {
+				if (e.key === 'Enter') {
+					console.log('Searching for:', (this as HTMLInputElement).value);
+				}
+			});
+		}
+	});
+</script> 
